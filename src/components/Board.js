@@ -46,11 +46,11 @@ class Board extends Component {
 
         board.map((row, rowIndex) => {
             row.map((column, columnIndex) => {
-                if(board[rowIndex][columnIndex].isMine === true){
+                if(board[rowIndex][columnIndex].isMine){
                     surroundingCells.map(adjacentCell => {
                         let neighbor = [rowIndex + adjacentCell[0], columnIndex + adjacentCell[1]]
                         if((neighbor[0] > -1 && neighbor[0] < boardWidth - 1) && (neighbor[1] > -1 && neighbor[1] < boardHeight - 1)){
-                            if(board[neighbor[0]][neighbor[1]].isMine === false){
+                            if(!board[neighbor[0]][neighbor[1]].isMine){
                                 board[neighbor[0]][neighbor[1]].minesAdjacent += 1
                             }
                         }
@@ -64,7 +64,7 @@ class Board extends Component {
     getEmptyCells(board){
         board.map((row, rowIndex) => {
             row.map((column, columnIndex) => {
-                if((board[rowIndex][columnIndex].isMine === false) && (board[rowIndex][columnIndex].minesAdjacent === 0)){
+                if((!board[rowIndex][columnIndex].isMine) && (board[rowIndex][columnIndex].minesAdjacent === 0)){
                     board[rowIndex][columnIndex].isEmpty = true
                 }
             })
