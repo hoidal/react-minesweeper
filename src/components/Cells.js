@@ -13,8 +13,10 @@ class Cells extends Component {
     }
 
     render(){
+        let styling = "cell" + (this.props.cell.isRevealed ? "" : "-hidden")
+        
         return (
-            <div className="cell" onClick={ this.props.guessAction }>
+            <div className={styling} onClick={ this.props.guessAction }>
                 {this.renderCells()}
             </div>
         )

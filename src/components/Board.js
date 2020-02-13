@@ -28,13 +28,15 @@ class Board extends Component {
 
     clickHandler = (x, y) => {
         let updatedGameboard = this.state.gameboard
+
         if(this.state.gameboard[x][y].isMine){
-            // this.revealBoard()
             alert("Game Over")
         } else if (this.state.gameboard[x][y].isEmpty){
             updatedGameboard = this.discover(x, y, updatedGameboard)
-            console.log(updatedGameboard)
+        } else if (this.state.gameboard[x][y].minesAdjacent > 0){
+            updatedGameboard[x][y].isRevealed = true
         }
+        this.setState({ gameboard: updatedGameboard})
     }
 
     discover = (x, y, board) => {
