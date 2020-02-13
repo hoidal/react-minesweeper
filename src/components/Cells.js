@@ -3,20 +3,18 @@ import React, { Component } from 'react'
 class Cells extends Component {
 
     renderCells = () => {
-        if (this.props.cellData.isMine){
+        if (this.props.cell.isMine){
             return "💣"
-        } else if (this.props.cellData.minesAdjacent === 0){
+        } else if (this.props.cell.minesAdjacent === 0){
             return null
         } else {
-            return this.props.cellData.minesAdjacent
+            return this.props.cell.minesAdjacent
         }
     }
 
-    
-
     render(){
         return (
-            <div>
+            <div className="cell" onClick={ this.props.guessAction }>
                 {this.renderCells()}
             </div>
         )
