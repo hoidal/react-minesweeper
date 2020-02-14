@@ -7,7 +7,9 @@ class Board extends Component {
         width: 0,
         height: 0,
         gameboard: [],
-        mines: 0
+        mines: 0,
+        minesRemaining: 0,
+        gameStatus: "Not Started"
     }
 
     createRows = (board) => {
@@ -25,12 +27,21 @@ class Board extends Component {
         })
     }
 
-    clickHandler = (x, y) => {
+    clickHandler = (event, x, y) => {
         let updatedGameboard = this.state.gameboard
 
+        if(this.state.gameStatus = "Not Started"){
+            document.getElementById("difficulty-selector").style.display = "none"
+            this.setState({ 
+                gameStatus: "Playing"
+            })
+        }
+
         if(this.state.gameboard[x][y].isMine){
+            this.setState({ gameStatus: "Game Over" })
             alert("Game Over")
             this.answerBoard()
+            event.target.id = "losing-mine"
         } else if (this.state.gameboard[x][y].isEmpty){
             updatedGameboard = this.discover(x, y, updatedGameboard)
         } else if (this.state.gameboard[x][y].minesAdjacent > 0){
@@ -41,14 +52,27 @@ class Board extends Component {
 
     flagHandler = (event, x, y) => {
         event.preventDefault()
+        let mineCount = this.state.minesRemaining
         let updatedGameboard = this.state.gameboard
         if(updatedGameboard[x][y].isFlagged){
             updatedGameboard[x][y].isFlagged = false
+            event.target.className = "cell-hidden"
         }
         if(!updatedGameboard[x][y].isFlagged){
             updatedGameboard[x][y].isFlagged = true
+            if(updatedGameboard[x][y].isMine){
+                mineCount--
+            }
         }
-        this.setState({ gameboard: updatedGameboard })
+        if(mineCount === 0){
+            this.setState({ gameStatus: "You Win!!" })
+            document.getElementById("mines-remaining").style.display = "none"
+            this.answerBoard()
+        }
+        this.setState({ 
+            gameboard: updatedGameboard,
+            minesRemaining: mineCount
+         })
     }
 
     discover = (x, y, board) => {
@@ -94,7 +118,8 @@ class Board extends Component {
                 height: nextProps.height,
                 width: nextProps.width,
                 gameboard: nextProps.gameboard,
-                mines: nextProps.mines
+                mines: nextProps.mines,
+                minesRemaining: nextProps.minesRemaining
             })
         }
         else return null
@@ -103,6 +128,10 @@ class Board extends Component {
     render(){
         return(
             <div id="grid">
+                <div id="game-status-menu">
+                    <h4>Status: {this.state.gameStatus}</h4>
+                    <h4 id="mines-remaining">Mines Remaining: {this.state.minesRemaining}</h4>
+                </div>
                 {this.createRows( this.props.gameboard )}
             </div>
         )

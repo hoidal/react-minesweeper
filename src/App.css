@@ -2,9 +2,17 @@
   text-align: center;
 }
 
+#difficulty {
+  margin: 1rem;
+}
+
 #board { 
+  width: 100%;
   display: flex;
   justify-content: center;
+}
+
+#grid {
   cursor: pointer;
 }
 
@@ -41,6 +49,7 @@
 
 .cell-blue {
   color: blue;
+  font-weight: bold;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -51,20 +60,70 @@
 
 .cell-green {
   color: green;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: .1rem solid black;
 }
 
 .cell-red {
   color: red;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: .1rem solid black;
 }
 
 .cell-navy {
-  color: navy;
+  color: rgb(0, 0, 119);
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: .1rem solid black;
 }
 
 .cell-burgandy {
-  color: rgb(75, 12, 12);
+  color: rgb(124, 0, 0);
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: .1rem solid black;
 }
 
 .cell-black {
   color: black;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: .1rem solid black;
+}
+
+#losing-mine {
+  background-color: red;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: .1rem solid black;
+}
+
+#game-status-menu {
+  display: flex;
+  justify-content: space-between;
 }
