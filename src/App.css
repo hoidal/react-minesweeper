@@ -147,7 +147,7 @@ h4 {
 
 #play-again-menu {
   display: none;
-  margin: 2rem;
+  margin: 0;
   size: 120%;
 }
 
@@ -159,18 +159,21 @@ h4 {
 
 #title {
   font-size: 300%;
-  margin: 1rem;
+  margin: 0;
+  padding: 0;
   font-family: 'Coda Caption', sans-serif;
 }
 
 #win-message {
   display: none;
   color: green;
+  margin: 0;
   font-family: 'Coda Caption', sans-serif;
 }
 
 #lose-message {
   display: none;
   color: red;
+  margin: 0;
   font-family: 'Coda Caption', sans-serif;
 }

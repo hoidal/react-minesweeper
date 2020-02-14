@@ -39,9 +39,10 @@ class Board extends Component {
 
         if(this.state.gameboard[x][y].isMine){
             this.setState({ gameStatus: "Game Over" })
-            alert("Game Over")
             this.answerBoard()
             event.target.id = "losing-mine"
+            document.getElementById("game-status").style.display = "none"
+            document.getElementById("mines-remaining").style.display = "none"
             document.getElementById("play-again-menu").style.display = "block"
             document.getElementById("lose-message").style.display = "block"
         } else if (this.state.gameboard[x][y].isEmpty){
