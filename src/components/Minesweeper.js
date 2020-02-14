@@ -7,7 +7,8 @@ class Minesweeper extends Component {
         boardWidth: 10,
         boardHeight: 10,
         mines: 10,
-        gameboard: []
+        gameboard: [],
+        minesRemaining: 10
     }
 
     setDifficulty = (event) => {
@@ -16,6 +17,7 @@ class Minesweeper extends Component {
                 boardHeight: 10,
                 boardWidth: 10,
                 mines: 10,
+                minesRemaining: 10,
                 gameboard: this.initializeBoard(10, 10, 10)
             })
         } else if (event.target.value === "intermediate"){
@@ -23,6 +25,7 @@ class Minesweeper extends Component {
                 boardHeight: 16,
                 boardWidth: 16,
                 mines: 40,
+                minesRemaining: 40,
                 gameboard: this.initializeBoard(16, 16, 40)
             })
         } else if (event.target.value === "expert"){
@@ -30,6 +33,7 @@ class Minesweeper extends Component {
                 boardHeight: 16,
                 boardWidth: 30,
                 mines: 99,
+                minesRemaining: 99,
                 gameboard: this.initializeBoard(30, 16, 99)
             })
         }
@@ -104,6 +108,36 @@ class Minesweeper extends Component {
         return board
     }
 
+    flagHandler = (event, x, y) => {
+        event.preventDefault()
+        
+        let mineCount = this.state.minesRemaining
+        let updatedGameboard = this.state.gameboard
+        if(updatedGameboard[x][y].isFlagged){
+            updatedGameboard[x][y].isFlagged = false
+            event.target.className = "cell-hidden"
+        }
+        if(!updatedGameboard[x][y].isFlagged){
+            updatedGameboard[x][y].isFlagged = true
+            if(updatedGameboard[x][y].isMine){
+                mineCount--
+            }
+        }
+        if(mineCount === 0){
+            this.setState({ gameStatus: "You Win" })
+            document.getElementById("game-status").style.display = "none"
+            document.getElementById("mines-remaining").style.display = "none"
+            document.getElementById("win-message").style.display = "block"
+            document.getElementById("play-again-menu").style.display = "block"
+            this.answerBoard()
+        }
+        this.setState({ 
+            gameboard: updatedGameboard,
+            minesRemaining: mineCount
+         })
+    }
+    
+
     componentDidMount = () => {
         this.setState({
             gameboard: this.initializeBoard(this.state.boardHeight, this.state.boardWidth, this.state.mines)
@@ -123,7 +157,8 @@ class Minesweeper extends Component {
                         gameboard={ this.state.gameboard }
                         width={ this.state.boardWidth }
                         height={ this.state.boardHeight }
-                        minesRemaining={ this.state.mines }
+                        minesRemaining={ this.state.minesRemaining }
+                        flagAction={ this.flagHandler }
                     />
                 </div>
                 <div id="difficulty-selector">

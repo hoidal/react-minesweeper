@@ -75,7 +75,7 @@ class Board extends Component {
             document.getElementById("play-again-menu").style.display = "block"
             this.answerBoard()
         }
-        return this.setState({ 
+        this.setState({ 
             gameboard: updatedGameboard,
             minesRemaining: mineCount
          })
@@ -155,7 +155,7 @@ class Board extends Component {
                 </div>
                     <h2 id="thank-you">Thank you for playing!</h2>
                     <h2 id="win-message">You Win!!!</h2>
-                    <h2 id="lose-message">You Lose.</h2>
+                    <h2 id="lose-message">You Lose. 😤</h2>
                 <div id="play-again-menu">
                         <label>Want to play again?</label>
                         <button onClick={ this.refreshPage }>Yes</button>
