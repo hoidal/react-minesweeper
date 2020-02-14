@@ -154,10 +154,23 @@ h4 {
 #thank-you {
   display: none;
   color: green;
+  font-family: 'Coda Caption', sans-serif;
 }
 
 #title {
   font-size: 300%;
   margin: 1rem;
+  font-family: 'Coda Caption', sans-serif;
+}
+
+#win-message {
+  display: none;
+  color: green;
+  font-family: 'Coda Caption', sans-serif;
+}
+
+#lose-message {
+  display: none;
+  color: red;
   font-family: 'Coda Caption', sans-serif;
 }

@@ -115,14 +115,6 @@ class Minesweeper extends Component {
             <div id="minesweeper-board">
                 <div id="menu">
                     <h1 id="title">Minesweeper</h1>
-                    <div id="difficulty-selector">
-                        <label>Select Difficulty:</label>
-                        <select id="difficulty" onChange={ this.setDifficulty }>
-                            <option id="easy" value="easy">Easy</option>
-                            <option id="intermediate" value="intermediate">Intermediate</option>
-                            <option id="expert" value="expert">Expert</option>
-                        </select>
-                    </div>
                 </div>
 
                 <div id="board">
@@ -133,6 +125,14 @@ class Minesweeper extends Component {
                         height={ this.state.boardHeight }
                         minesRemaining={ this.state.mines }
                     />
+                </div>
+                <div id="difficulty-selector">
+                    <label>Select Difficulty:</label>
+                    <select id="difficulty" onChange={ this.setDifficulty }>
+                        <option id="easy" value="easy">Easy</option>
+                        <option id="intermediate" value="intermediate">Intermediate</option>
+                        <option id="expert" value="expert">Expert</option>
+                    </select>
                 </div>
             </div>
         )

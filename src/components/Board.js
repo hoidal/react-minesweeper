@@ -43,6 +43,7 @@ class Board extends Component {
             this.answerBoard()
             event.target.id = "losing-mine"
             document.getElementById("play-again-menu").style.display = "block"
+            document.getElementById("lose-message").style.display = "block"
         } else if (this.state.gameboard[x][y].isEmpty){
             updatedGameboard = this.discover(x, y, updatedGameboard)
         } else if (this.state.gameboard[x][y].minesAdjacent > 0){
@@ -66,11 +67,14 @@ class Board extends Component {
             }
         }
         if(mineCount === 0){
-            this.setState({ gameStatus: "You Win!!" })
+            this.setState({ gameStatus: "You Win" })
+            document.getElementById("game-status").style.display = "none"
             document.getElementById("mines-remaining").style.display = "none"
+            document.getElementById("win-message").style.display = "block"
+            document.getElementById("play-again-menu").style.display = "block"
             this.answerBoard()
         }
-        this.setState({ 
+        return this.setState({ 
             gameboard: updatedGameboard,
             minesRemaining: mineCount
          })
@@ -120,6 +124,8 @@ class Board extends Component {
         document.getElementById("thank-you").style.display = "block"
         document.getElementById("play-again-menu").style.display = "none"
         document.getElementById("game-status-menu").style.display = "none"
+        document.getElementById("win-message").style.display = "none"
+        document.getElementById("lose-message").style.display = "none"
     }
 
 
@@ -140,17 +146,19 @@ class Board extends Component {
         return(
             <div id="menu-and-board">
                 <div id="game-status-menu">
-                    <h4>Status: {this.state.gameStatus}</h4>
+                    <h4 id="game-status">Status: {this.state.gameStatus}</h4>
                     <h4 id="mines-remaining">Mines Remaining: {this.state.minesRemaining}</h4>
                 </div>
+                <div id="grid">
+                    {this.createRows( this.props.gameboard )}
+                </div>
+                    <h2 id="thank-you">Thank you for playing!</h2>
+                    <h2 id="win-message">You Win!!!</h2>
+                    <h2 id="lose-message">You Lose.</h2>
                 <div id="play-again-menu">
                         <label>Want to play again?</label>
                         <button onClick={ this.refreshPage }>Yes</button>
                         <button onClick={ this.thankYouMessage }>No</button>
-                </div>
-                <h2 id="thank-you">Thank you for playing!</h2>
-                <div id="grid">
-                    {this.createRows( this.props.gameboard )}
                 </div>
             </div> 
         )
