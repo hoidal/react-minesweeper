@@ -42,6 +42,7 @@ class Board extends Component {
             alert("Game Over")
             this.answerBoard()
             event.target.id = "losing-mine"
+            document.getElementById("play-again-menu").style.display = "block"
         } else if (this.state.gameboard[x][y].isEmpty){
             updatedGameboard = this.discover(x, y, updatedGameboard)
         } else if (this.state.gameboard[x][y].minesAdjacent > 0){
@@ -111,6 +112,16 @@ class Board extends Component {
         return answerboard
     }
 
+    refreshPage = () => {
+        window.location.reload()
+    }
+
+    thankYouMessage = () => {
+        document.getElementById("thank-you").style.display = "block"
+        document.getElementById("play-again-menu").style.display = "none"
+        document.getElementById("game-status-menu").style.display = "none"
+    }
+
 
     static getDerivedStateFromProps(nextProps, prevState){
         if(nextProps.gameboard !== prevState.gameboard){
@@ -127,13 +138,21 @@ class Board extends Component {
 
     render(){
         return(
-            <div id="grid">
+            <div id="menu-and-board">
                 <div id="game-status-menu">
                     <h4>Status: {this.state.gameStatus}</h4>
                     <h4 id="mines-remaining">Mines Remaining: {this.state.minesRemaining}</h4>
                 </div>
-                {this.createRows( this.props.gameboard )}
-            </div>
+                <div id="play-again-menu">
+                        <label>Want to play again?</label>
+                        <button onClick={ this.refreshPage }>Yes</button>
+                        <button onClick={ this.thankYouMessage }>No</button>
+                </div>
+                <h2 id="thank-you">Thank you for playing!</h2>
+                <div id="grid">
+                    {this.createRows( this.props.gameboard )}
+                </div>
+            </div> 
         )
     }
 }

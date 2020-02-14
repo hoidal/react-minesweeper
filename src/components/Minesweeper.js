@@ -114,7 +114,7 @@ class Minesweeper extends Component {
         return(
             <div id="minesweeper-board">
                 <div id="menu">
-                    <h1>Minesweeper</h1>
+                    <h1 id="title">Minesweeper</h1>
                     <div id="difficulty-selector">
                         <label>Select Difficulty:</label>
                         <select id="difficulty" onChange={ this.setDifficulty }>
