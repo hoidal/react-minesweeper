@@ -7,10 +7,7 @@ class Minesweeper extends Component {
         boardWidth: 10,
         boardHeight: 10,
         mines: 10,
-        gameboard: [],
-        gameStatus: "Not Started",
-        minesRemaining: 0,
-        timer: 0
+        gameboard: []
     }
 
     setDifficulty = (event) => {
@@ -118,23 +115,20 @@ class Minesweeper extends Component {
             <div id="minesweeper-board">
                 <div id="menu">
                     <h1>Minesweeper</h1>
-                    <select id="difficulty" onChange={this.setDifficulty}>
-                        <option id="easy" value="easy">Easy</option>
-                        <option id="intermediate" value="intermediate">Intermediate</option>
-                        <option id="expert" value="expert">Expert</option>
-                    </select>
-                    <button>Start</button>
+                    <div id="difficulty-selector">
+                        <h3>Select Difficulty:</h3>
+                        <select id="difficulty" onChange={ this.setDifficulty }>
+                            <option id="easy" value="easy">Easy</option>
+                            <option id="intermediate" value="intermediate">Intermediate</option>
+                            <option id="expert" value="expert">Expert</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div id="board">
                     <Board 
-                        boardHeight={ this.state.boardHeight }
-                        boardWidth={ this.state.boardWidth }
                         mines={ this.state.mines }
                         gameboard={ this.state.gameboard }
-                        gameStatus={ this.state.gameStatus }
-                        minesRemaining={ this.state.minesRemaining }
-                        timer={ this.state.timer }
                         width={ this.state.boardWidth }
                         height={ this.state.boardHeight }
                     />

@@ -13,6 +13,7 @@ class Rows extends Component {
                     key = { i }
                     cell = { cell }
                     guessAction = { () => this.props.guessAction(cell.x, cell.y) }
+                    flagAction = { (event) => this.props.flagAction(event, cell.x, cell.y) }
                 />
             )
         })

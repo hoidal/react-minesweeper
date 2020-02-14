@@ -7,8 +7,6 @@ class Board extends Component {
         width: 0,
         height: 0,
         gameboard: [],
-        gameStatus: "Not Started",
-        minesRemaining: 0,
         mines: 0
     }
 
@@ -21,6 +19,7 @@ class Board extends Component {
                     key = { i }
                     rowContents = { row }
                     guessAction = { this.clickHandler }
+                    flagAction = { this.flagHandler }
                 />
             )
         })
@@ -31,23 +30,43 @@ class Board extends Component {
 
         if(this.state.gameboard[x][y].isMine){
             alert("Game Over")
+            this.answerBoard()
         } else if (this.state.gameboard[x][y].isEmpty){
             updatedGameboard = this.discover(x, y, updatedGameboard)
         } else if (this.state.gameboard[x][y].minesAdjacent > 0){
             updatedGameboard[x][y].isRevealed = true
         }
-        this.setState({ gameboard: updatedGameboard})
+        this.setState({ gameboard: updatedGameboard })
+    }
+
+    flagHandler = (event, x, y) => {
+        event.preventDefault()
+        let updatedGameboard = this.state.gameboard
+        if(updatedGameboard[x][y].isFlagged){
+            updatedGameboard[x][y].isFlagged = false
+        }
+        if(!updatedGameboard[x][y].isFlagged){
+            updatedGameboard[x][y].isFlagged = true
+        }
+        this.setState({ gameboard: updatedGameboard })
     }
 
     discover = (x, y, board) => {
         const surroundingCells = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]]
         
-        surroundingCells.map(adjacentCell => {
-            return [adjacentCell[0] + x, adjacentCell[1] + y]
-        }).filter(validCell => {
-            return validCell[0] > -1 && validCell[1] > -1 && validCell[0] < this.state.width && validCell[1] < this.state.height
-        }).map(targetCell => {
-            let neighbor = board[targetCell[0]][targetCell[1]]
+        surroundingCells.map(cell => {
+            return [cell[0] + x, cell[1] + y]
+        }).filter(cell => {
+            return cell[0] > -1
+        }).filter(cell => {
+            return cell[0] < this.props.height
+        }).filter(cell => {
+            return cell[1] > -1 
+        }).filter(cell => {
+            return cell[1] < this.props.width
+        }).map(neighbor => {
+            return board[neighbor[0]][neighbor[1]]
+        }).map(neighbor => {
             if(!neighbor.isRevealed && (neighbor.isEmpty || !neighbor.isMine)){
                 neighbor.isRevealed = true
                 if(neighbor.isEmpty){
@@ -58,33 +77,33 @@ class Board extends Component {
         return board
     }
 
+    answerBoard = () => {
+        let answerboard = this.state.gameboard
+        answerboard.map(row => {
+            return row.map(cell => {
+                return cell.isRevealed = true
+            })
+        })
+        return answerboard
+    }
+
 
     static getDerivedStateFromProps(nextProps, prevState){
         if(nextProps.gameboard !== prevState.gameboard){
             return({ 
-                height: nextProps.boardHeight,
-                width: nextProps.boardWidth,
+                height: nextProps.height,
+                width: nextProps.width,
                 gameboard: nextProps.gameboard,
-                gameStatus: nextProps.gameStatus,
-                minesRemaining: nextProps.minesRemaining,
-                mines: 0
+                mines: nextProps.mines
             })
-       }
-       else return null
-     }
-     
-    //  componentDidUpdate(prevProps, prevState) {
-    //    if(prevProps.someValue!==this.props.someValue){
-    //      //Perform some operation here
-    //      this.setState({someState: someValue});
-    //      this.classMethod();
-    //    }
-    //  }
+        }
+        else return null
+    }
 
     render(){
         return(
             <div id="grid">
-                {this.createRows( this.state.gameboard )}
+                {this.createRows( this.props.gameboard )}
             </div>
         )
     }
