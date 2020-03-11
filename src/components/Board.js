@@ -61,7 +61,7 @@ class Board extends Component {
             updatedGameboard[x][y].isFlagged = false
             event.target.className = "cell-hidden"
         }
-        if(!updatedGameboard[x][y].isFlagged){
+        if(updatedGameboard[x][y].isFlagged === false){
             updatedGameboard[x][y].isFlagged = true
             if(updatedGameboard[x][y].isMine){
                 mineCount--
@@ -155,7 +155,7 @@ class Board extends Component {
                 </div>
                     <h2 id="thank-you">Thank you for playing!</h2>
                     <h2 id="win-message">You Win!!!</h2>
-                    <h2 id="lose-message">You Lose. 😤</h2>
+                    <h2 id="lose-message">You Lose.</h2>
                 <div id="play-again-menu">
                         <label>Want to play again?</label>
                         <button onClick={ this.refreshPage }>Yes</button>
