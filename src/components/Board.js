@@ -1,100 +1,167 @@
 import React, { Component } from 'react'
-import Cells from './Cells'
+import Rows from './Rows'
 
 class Board extends Component {
-   
-    initializeBoard(boardHeight, boardWidth, mines){
-        let board = []
-        for(let x = 0; x < boardWidth; x++){
-            board.push([])
-            for (let y = 0; y < boardHeight; y++){
-                board[x][y] = {
-                    x,
-                    y,
-                    minesAdjacent: 0,
-                    isMine: false,
-                    isEmpty: false,
-                    isRevealed: false,
-                    isFlagged: false
-                }
-            }
-        }
-        board = this.setMines(board, boardHeight, boardWidth, mines)
-        board = this.getNumMinesAdjacent(board, boardHeight, boardWidth)
-        board = this.getEmptyCells(board)
-        return board
+
+    state = {
+        width: 0,
+        height: 0,
+        gameboard: [],
+        mines: 0,
+        minesRemaining: 0,
+        gameStatus: "Not Started"
     }
 
-    setMines(board, boardHeight, boardWidth, mines){
-        let minesPlaced = 0
-        while(minesPlaced < mines){
-            let mineCoordinateX = this.randomizeXCoordinate(boardWidth)
-            let mineCoordinateY = this.randomizeYCoordinate(boardHeight)
-            if(!board[mineCoordinateX][mineCoordinateY].isMine){
-                board[mineCoordinateX][mineCoordinateY].isMine = true
-                minesPlaced++
-            }
-        }
-        return board
-    }
-
-    randomizeXCoordinate = width => Math.floor(Math.random() * width)
-    randomizeYCoordinate = height => Math.floor(Math.random() * height)
-    
-    getNumMinesAdjacent(board, boardHeight, boardWidth){
-        const surroundingCells = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]]
-
-        board.map((row, rowIndex) => {
-            row.map((column, columnIndex) => {
-                if(board[rowIndex][columnIndex].isMine){
-                    surroundingCells.map(adjacentCell => {
-                        let neighbor = [rowIndex + adjacentCell[0], columnIndex + adjacentCell[1]]
-                        if((neighbor[0] > -1 && neighbor[0] < boardWidth - 1) && (neighbor[1] > -1 && neighbor[1] < boardHeight - 1)){
-                            if(!board[neighbor[0]][neighbor[1]].isMine){
-                                board[neighbor[0]][neighbor[1]].minesAdjacent += 1
-                            }
-                        }
-                    })
-                }
-            })
-        })
-        return board
-    }
-
-    getEmptyCells(board){
-        board.map((row, rowIndex) => {
-            row.map((column, columnIndex) => {
-                if((!board[rowIndex][columnIndex].isMine) && (board[rowIndex][columnIndex].minesAdjacent === 0)){
-                    board[rowIndex][columnIndex].isEmpty = true
-                }
-            })
-        })
-        return board
-    }
-
-    createBoard(board){
+    createRows = (board) => {
         let i = 0
-        return board.map((row, rowIndex) => {
-            return row.map((column, columnIndex) => {
-                i++
-                let info = board[rowIndex][columnIndex]
-                return (
-                    <Cells
-                        key = { i }
-                        cellData = { info }
-                    />
-                )
+        return board.map(row => {
+            i++
+            return (
+                <Rows
+                    key = { i }
+                    rowContents = { row }
+                    guessAction = { this.clickHandler }
+                    flagAction = { this.flagHandler }
+                />
+            )
+        })
+    }
+
+    clickHandler = (event, x, y) => {
+        let updatedGameboard = this.state.gameboard
+
+        if(this.state.gameStatus = "Not Started"){
+            document.getElementById("difficulty-selector").style.display = "none"
+            this.setState({ 
+                gameStatus: "Playing"
+            })
+        }
+
+        if(this.state.gameboard[x][y].isMine){
+            this.setState({ gameStatus: "Game Over" })
+            this.answerBoard()
+            event.target.id = "losing-mine"
+            document.getElementById("game-status").style.display = "none"
+            document.getElementById("mines-remaining").style.display = "none"
+            document.getElementById("play-again-menu").style.display = "block"
+            document.getElementById("lose-message").style.display = "block"
+        } else if (this.state.gameboard[x][y].isEmpty){
+            updatedGameboard = this.discover(x, y, updatedGameboard)
+        } else if (this.state.gameboard[x][y].minesAdjacent > 0){
+            updatedGameboard[x][y].isRevealed = true
+        }
+        this.setState({ gameboard: updatedGameboard })
+    }
+
+    flagHandler = (event, x, y) => {
+        event.preventDefault()
+        let mineCount = this.state.minesRemaining
+        let updatedGameboard = this.state.gameboard
+        if(updatedGameboard[x][y].isFlagged){
+            updatedGameboard[x][y].isFlagged = false
+            event.target.className = "cell-hidden"
+        }
+        if(updatedGameboard[x][y].isFlagged === false){
+            updatedGameboard[x][y].isFlagged = true
+            if(updatedGameboard[x][y].isMine){
+                mineCount--
+            }
+        }
+        if(mineCount === 0){
+            this.setState({ gameStatus: "You Win" })
+            document.getElementById("game-status").style.display = "none"
+            document.getElementById("mines-remaining").style.display = "none"
+            document.getElementById("win-message").style.display = "block"
+            document.getElementById("play-again-menu").style.display = "block"
+            this.answerBoard()
+        }
+        this.setState({ 
+            gameboard: updatedGameboard,
+            minesRemaining: mineCount
+         })
+    }
+
+    discover = (x, y, board) => {
+        const surroundingCells = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]]
+        
+        surroundingCells.map(cell => {
+            return [cell[0] + x, cell[1] + y]
+        }).filter(cell => {
+            return cell[0] > -1
+        }).filter(cell => {
+            return cell[0] < this.props.height
+        }).filter(cell => {
+            return cell[1] > -1 
+        }).filter(cell => {
+            return cell[1] < this.props.width
+        }).map(neighbor => {
+            return board[neighbor[0]][neighbor[1]]
+        }).map(neighbor => {
+            if(!neighbor.isRevealed && (neighbor.isEmpty || !neighbor.isMine)){
+                neighbor.isRevealed = true
+                if(neighbor.isEmpty){
+                    this.discover(neighbor.x, neighbor.y, board)
+                }
+            }
+        })
+        return board
+    }
+
+    answerBoard = () => {
+        let answerboard = this.state.gameboard
+        answerboard.map(row => {
+            return row.map(cell => {
+                return cell.isRevealed = true
             })
         })
+        return answerboard
+    }
+
+    refreshPage = () => {
+        window.location.reload()
+    }
+
+    thankYouMessage = () => {
+        document.getElementById("thank-you").style.display = "block"
+        document.getElementById("play-again-menu").style.display = "none"
+        document.getElementById("game-status-menu").style.display = "none"
+        document.getElementById("win-message").style.display = "none"
+        document.getElementById("lose-message").style.display = "none"
+    }
+
+
+    static getDerivedStateFromProps(nextProps, prevState){
+        if(nextProps.gameboard !== prevState.gameboard){
+            return({ 
+                height: nextProps.height,
+                width: nextProps.width,
+                gameboard: nextProps.gameboard,
+                mines: nextProps.mines,
+                minesRemaining: nextProps.minesRemaining
+            })
+        }
+        else return null
     }
 
     render(){
-        // console.log(this.initializeBoard(this.props.boardHeight, this.props.boardWidth, this.props.mines))
-        // console.log(this.createBoard(this.initializeBoard(this.props.boardHeight, this.props.boardWidth, this.props.mines)))
         return(
-            <div className="board">
-                {this.createBoard(this.initializeBoard(this.props.boardHeight, this.props.boardWidth, this.props.mines))}
-            </div>
+            <div id="menu-and-board">
+                <div id="game-status-menu">
+                    <h4 id="game-status">Status: {this.state.gameStatus}</h4>
+                    <h4 id="mines-remaining">Mines Remaining: {this.state.minesRemaining}</h4>
+                </div>
+                <div id="grid">
+                    {this.createRows( this.props.gameboard )}
+                </div>
+                    <h2 id="thank-you">Thank you for playing!</h2>
+                    <h2 id="win-message">You Win!!!</h2>
+                    <h2 id="lose-message">You Lose.</h2>
+                <div id="play-again-menu">
+                        <label>Want to play again?</label>
+                        <button onClick={ this.refreshPage }>Yes</button>
+                        <button onClick={ this.thankYouMessage }>No</button>
+                </div>
+            </div> 
         )
     }
 }
