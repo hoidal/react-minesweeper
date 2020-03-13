@@ -57,17 +57,18 @@ class Board extends Component {
         event.preventDefault()
         let mineCount = this.state.minesRemaining
         let updatedGameboard = this.state.gameboard
-        if(updatedGameboard[x][y].isFlagged){
+        if (updatedGameboard[x][y].isFlagged === true) {
             updatedGameboard[x][y].isFlagged = false
-            event.target.className = "cell-hidden"
-        }
-        if(updatedGameboard[x][y].isFlagged === false){
+            if (updatedGameboard[x][y].isMine) {
+                mineCount++
+            }
+        } else if (updatedGameboard[x][y].isFlagged === false) {
             updatedGameboard[x][y].isFlagged = true
-            if(updatedGameboard[x][y].isMine){
+            if (updatedGameboard[x][y].isMine) {
                 mineCount--
             }
         }
-        if(mineCount === 0){
+        if (mineCount === 0) {
             this.setState({ gameStatus: "You Win" })
             document.getElementById("game-status").style.display = "none"
             document.getElementById("mines-remaining").style.display = "none"
