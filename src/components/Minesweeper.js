@@ -107,35 +107,6 @@ class Minesweeper extends Component {
         })
         return board
     }
-
-    flagHandler = (event, x, y) => {
-        event.preventDefault()
-        
-        let mineCount = this.state.minesRemaining
-        let updatedGameboard = this.state.gameboard
-        if(updatedGameboard[x][y].isFlagged){
-            updatedGameboard[x][y].isFlagged = false
-            event.target.className = "cell-hidden"
-        }
-        if(!updatedGameboard[x][y].isFlagged){
-            updatedGameboard[x][y].isFlagged = true
-            if(updatedGameboard[x][y].isMine){
-                mineCount--
-            }
-        }
-        if(mineCount === 0){
-            this.setState({ gameStatus: "You Win" })
-            document.getElementById("game-status").style.display = "none"
-            document.getElementById("mines-remaining").style.display = "none"
-            document.getElementById("win-message").style.display = "block"
-            document.getElementById("play-again-menu").style.display = "block"
-            this.answerBoard()
-        }
-        this.setState({ 
-            gameboard: updatedGameboard,
-            minesRemaining: mineCount
-         })
-    }
     
 
     componentDidMount = () => {
