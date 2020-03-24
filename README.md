@@ -4,6 +4,7 @@ A re-creation of the classic computer game, Minesweeper, built in React.
 ## Play React Minesweeper
 [React Minesweeper](https://react-minesweeper-99605.firebaseapp.com)
 
+<img src="https://user-images.githubusercontent.com/55669941/77474603-03f7e880-6ddd-11ea-95ba-01557e391505.png" width="500" />
 
 ***
 #### How to Play
